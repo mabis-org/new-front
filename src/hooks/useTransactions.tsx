@@ -1,11 +1,11 @@
-import { createContext, useEffect, useState } from "react";
-import { ITransactionInput } from "./interfaces/ITransactionInput";
-import { ITransactionProps } from "./interfaces/ITransactionProps";
-import { ITransactionsContextData } from "./interfaces/ITransactionsContextData";
-import { ITransactionsProviderProps } from "./interfaces/ITransactionsProviderProps";
-import { api } from "./services/api";
+import { createContext, useContext, useEffect, useState } from "react";
+import { ITransactionInput } from "../interfaces/ITransactionInput";
+import { ITransactionProps } from "../interfaces/ITransactionProps";
+import { ITransactionsContextData } from "../interfaces/ITransactionsContextData";
+import { ITransactionsProviderProps } from "../interfaces/ITransactionsProviderProps";
+import { api } from "../services/api";
 
-export const TransactionsContext = createContext<ITransactionsContextData>(
+const TransactionsContext = createContext<ITransactionsContextData>(
     {} as ITransactionsContextData
 );
 
@@ -23,11 +23,7 @@ export function TransactionsProvider({ children }: ITransactionsProviderProps) {
             ...transactionInput,
             createdAt: new Date()
         })
-        
         const { transaction } = response.data;
-        
-        console.log("Inserindo transaction", transaction);
-
         setTransactions([ ...transactions, transaction ]);
     }
 
@@ -36,4 +32,9 @@ export function TransactionsProvider({ children }: ITransactionsProviderProps) {
             {children}
         </TransactionsContext.Provider>
     );
+}
+
+export function useTransactions() {
+    const context = useContext(TransactionsContext);
+    return context;
 }
